@@ -6,6 +6,7 @@
     "minimum-stability": "dev",
     "require": {
         "city-of-helsinki/php-hauki-client": "^1.0",
+        "drupal/key_value_field": "^1.0",
         "drupal/helfi_api_base": "*",
         "ext-json": "*"
     },

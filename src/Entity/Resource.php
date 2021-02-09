@@ -11,6 +11,7 @@ use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\helfi_api_base\Entity\RemoteEntityBase;
 use Drupal\helfi_tpr\Entity\Service;
 use Drupal\helfi_tpr\Entity\Unit;
+use Hauki\Model\DataSource;
 
 /**
  * Defines the hauki_resource entity class.
@@ -64,68 +65,69 @@ use Drupal\helfi_tpr\Entity\Unit;
 final class Resource extends RemoteEntityBase {
 
   use RevisionLogEntityTrait;
+
   /**
-   * Adds the given service.
+   * Adds the given data source.
    *
-   * @param \Drupal\helfi_tpr\Entity\Service $service
-   *   The service.
+   * @param \Hauki\Model\DataSource $source
+   *   The data source.
    *
    * @return $this
    *   The self.
    */
-  public function addService(Service $service) : self {
-    if (!$this->hasService($service)) {
-      $this->get('services')->appendItem($service);
+  public function addOrigin(DataSource $source) : self {
+    if (!$this->hasOrigin($source)) {
+      $this->get('origins')->appendItem($source);
     }
     return $this;
   }
 
   /**
-   * Removes the given service.
+   * Removes the given source.
    *
-   * @param \Drupal\helfi_tpr\Entity\Service $service
-   *   The service.
+   * @param \Hauki\Model\DataSource $source
+   *   The data source.
    *
    * @return $this
    *   The self.
    */
-  public function removeService(Service $service) : self {
-    $index = $this->getServiceIndex($service);
+  public function removeOrigin(DataSource $source) : self {
+    $index = $this->getOriginIndex($source);
     if ($index !== FALSE) {
-      $this->get('services')->offsetUnset($index);
+      $this->get('origins')->offsetUnset($index);
     }
     return $this;
   }
 
   /**
-   * Checks whether the service exists or not.
+   * Checks whether the source exists or not.
    *
-   * @param \Drupal\helfi_tpr\Entity\Service $service
-   *   The service.
+   * @param \Hauki\Model\DataSource $source
+   *   The source.
    *
    * @return bool
-   *   Whether we have given service or not.
+   *   Whether we have given source or not.
    */
-  public function hasService(Service $service) : bool {
-    return $this->getServiceIndex($service) !== FALSE;
+  public function hasOrigin(DataSource $source) : bool {
+    return $this->getOriginIndex($source) !== FALSE;
   }
 
   /**
-   * Gets the index of the given service.
+   * Gets the index of the given source.
    *
-   * @param \Drupal\helfi_tpr\Entity\Service $service
-   *   The service.
+   * @param \Hauki\Model\DataSource $source
+   *   The source.
    *
    * @return int|bool
-   *   The index of the given service, or FALSE if not found.
+   *   The index of the given source, or FALSE if not found.
    */
-  protected function getServiceIndex(Service $service) {
-    $values = $this->get('services')->getValue();
-    $order_item_ids = array_map(function ($value) {
-      return $value['target_id'];
+  protected function getOriginIndex(DataSource $source) {
+    $values = $this->get('origins')->getValue();
+    $ids = array_map(function ($value) {
+      return $value['value'];
     }, $values);
 
-    return array_search($service->id(), $order_item_ids);
+    return array_search($source->getId(), $ids);
   }
 
   /**
