@@ -2,24 +2,22 @@
 
 declare(strict_types = 1);
 
-namespace Drupal\helfi_ahjo\Entity;
+namespace Drupal\helfi_hauki\Entity;
 
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\RevisionLogEntityTrait;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\helfi_api_base\Entity\RemoteEntityBase;
-use Drupal\helfi_tpr\Entity\Service;
-use Drupal\helfi_tpr\Entity\Unit;
-use Hauki\Model\DataSource;
+use Hauki\Model\ResourceOrigin;
 
 /**
  * Defines the hauki_resource entity class.
  *
  * @ContentEntityType(
  *   id = "hauki_resource",
- *   label = @Translation("Hauki - Opening Hour"),
- *   label_collection = @Translation("Hauki - Opening Hour"),
+ *   label = @Translation("Hauki - Resource"),
+ *   label_collection = @Translation("Hauki - Resource"),
  *   handlers = {
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *     "list_builder" = "Drupal\Core\Entity\EntityListBuilder",
@@ -45,7 +43,7 @@ use Hauki\Model\DataSource;
  *     "revision" = "revision_id",
  *     "langcode" = "langcode",
  *     "uid" = "uid",
- *     "label" = "title",
+ *     "label" = "name",
  *     "uuid" = "uuid"
  *   },
  *   revision_metadata_keys = {
@@ -69,15 +67,20 @@ final class Resource extends RemoteEntityBase {
   /**
    * Adds the given data source.
    *
-   * @param \Hauki\Model\DataSource $source
-   *   The data source.
+   * @param string $source_type_id
+   *   The source type id (for example tprek).
+   * @param string $origin_id
+   *   The origin id (for example miscinfo-12345).
    *
    * @return $this
    *   The self.
    */
-  public function addOrigin(DataSource $source) : self {
-    if (!$this->hasOrigin($source)) {
-      $this->get('origins')->appendItem($source);
+  public function addOrigin(string $source_type_id, string $origin_id) : self {
+    if (!$this->hasOrigin($origin_id)) {
+      $this->get('origins')->appendItem([
+        'key' => $source_type_id,
+        'value' => $origin_id,
+      ]);
     }
     return $this;
   }
@@ -85,14 +88,14 @@ final class Resource extends RemoteEntityBase {
   /**
    * Removes the given source.
    *
-   * @param \Hauki\Model\DataSource $source
-   *   The data source.
+   * @param string $origin
+   *   The origin id.
    *
    * @return $this
    *   The self.
    */
-  public function removeOrigin(DataSource $source) : self {
-    $index = $this->getOriginIndex($source);
+  public function removeOrigin(string $origin) : self {
+    $index = $this->getOriginIndex($origin);
     if ($index !== FALSE) {
       $this->get('origins')->offsetUnset($index);
     }
@@ -102,32 +105,32 @@ final class Resource extends RemoteEntityBase {
   /**
    * Checks whether the source exists or not.
    *
-   * @param \Hauki\Model\DataSource $source
-   *   The source.
+   * @param string $origin
+   *   The origin id.
    *
    * @return bool
    *   Whether we have given source or not.
    */
-  public function hasOrigin(DataSource $source) : bool {
-    return $this->getOriginIndex($source) !== FALSE;
+  public function hasOrigin(string $origin) : bool {
+    return $this->getOriginIndex($origin) !== FALSE;
   }
 
   /**
-   * Gets the index of the given source.
+   * Gets the index of the given origin.
    *
-   * @param \Hauki\Model\DataSource $source
-   *   The source.
+   * @param string $origin
+   *   The origin id.
    *
    * @return int|bool
    *   The index of the given source, or FALSE if not found.
    */
-  protected function getOriginIndex(DataSource $source) {
+  protected function getOriginIndex(string $origin) {
     $values = $this->get('origins')->getValue();
     $ids = array_map(function ($value) {
-      return $value['value'];
+      return $value['key'];
     }, $values);
 
-    return array_search($source->getId(), $ids);
+    return array_search($origin, $ids);
   }
 
   /**
@@ -136,7 +139,7 @@ final class Resource extends RemoteEntityBase {
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
 
-    $fields['title'] = BaseFieldDefinition::create('string')
+    $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(new TranslatableMarkup('Title'))
       ->setTranslatable(TRUE)
       ->setRevisionable(TRUE)
@@ -148,6 +151,12 @@ final class Resource extends RemoteEntityBase {
         'max_length' => 255,
         'text_processing' => 0,
       ]);
+
+    $fields['origins'] = BaseFieldDefinition::create('key_value')
+      ->setLabel(new TranslatableMarkup('Origins'))
+      ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
+      ->setDisplayConfigurable('view', TRUE)
+      ->setDisplayConfigurable('form', TRUE);
 
     return $fields;
   }
