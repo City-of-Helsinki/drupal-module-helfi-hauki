@@ -7,15 +7,12 @@ namespace Drupal\helfi_hauki\Plugin\migrate\source;
 use Drupal\Component\Utility\UrlHelper;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Url;
-use Drupal\helfi_api_base\MigrateTrait;
 use Drupal\helfi_api_base\Plugin\migrate\source\HttpSourcePluginBase;
 
 /**
  * Source plugin base for retrieving data from Hauki.
  */
 abstract class Hauki extends HttpSourcePluginBase implements ContainerFactoryPluginInterface {
-
-  use MigrateTrait;
 
   /**
    * The total count.
@@ -105,6 +102,8 @@ abstract class Hauki extends HttpSourcePluginBase implements ContainerFactoryPlu
   protected function initializeListIterator() : \Iterator {
     $this->buildUrls();
 
+    $processed = 0;
+
     foreach ($this->urls as $url) {
       $content = $this->getContent($url);
 
@@ -113,6 +112,12 @@ abstract class Hauki extends HttpSourcePluginBase implements ContainerFactoryPlu
         // ignored (not changed) rows.
         // @see static::NUM_IGNORED_ROWS_BEFORE_STOPPING.
         if ($this->isPartialMigrate() && ($this->ignoredRows >= static::NUM_IGNORED_ROWS_BEFORE_STOPPING)) {
+          break 2;
+        }
+        $processed++;
+
+        // Allow number of items to be limited by using an env variable.
+        if (($this->getLimit() > 0) && $processed > $this->getLimit()) {
           break 2;
         }
         $this->processItem($object);
