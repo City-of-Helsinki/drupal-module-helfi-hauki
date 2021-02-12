@@ -10,8 +10,6 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\helfi_api_base\Entity\RemoteEntityBase;
-use Drupal\key_value_field\Plugin\Field\FieldType\KeyValueItem;
-use Hauki\Model\ResourceOrigin;
 
 /**
  * Defines the hauki_resource entity class.

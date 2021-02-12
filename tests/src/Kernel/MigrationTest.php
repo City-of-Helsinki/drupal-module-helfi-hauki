@@ -76,7 +76,6 @@ class MigrationTest extends MigrationTestBase {
       $responses[] = new Response(200, [], json_encode($response));
     }
 
-
     $this->container->set('http_client', $this->createMockHttpClient($responses));
     $this->executeMigration('hauki_resource', [
       'source' => [
