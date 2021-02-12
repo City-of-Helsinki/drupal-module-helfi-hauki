@@ -7,8 +7,10 @@ namespace Drupal\helfi_hauki\Entity;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\RevisionLogEntityTrait;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\helfi_api_base\Entity\RemoteEntityBase;
+use Drupal\key_value_field\Plugin\Field\FieldType\KeyValueItem;
 use Hauki\Model\ResourceOrigin;
 
 /**
@@ -83,6 +85,16 @@ final class Resource extends RemoteEntityBase {
       ]);
     }
     return $this;
+  }
+
+  /**
+   * Gets the origins.
+   *
+   * @return \Drupal\Core\Field\FieldItemListInterface
+   *   The origins.
+   */
+  public function getOrigins() : FieldItemListInterface {
+    return $this->get('origins');
   }
 
   /**
