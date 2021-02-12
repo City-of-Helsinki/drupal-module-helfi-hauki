@@ -57,8 +57,8 @@ abstract class Hauki extends HttpSourcePluginBase implements ContainerFactoryPlu
 
     $limit = $currentUrl['query']['page_size'] ?? 100;
 
-    // The api is sorted by oldest item first, start fetching data from the last page
-    // to make sure we always get the newest items first.
+    // The api is sorted by oldest item first, start fetching data from the
+    // last page to make sure we always get the newest items first.
     for ($i = ceil($this->count / $limit); $i > 0; $i--) {
       $currentUrl['query']['page'] = $i;
 
