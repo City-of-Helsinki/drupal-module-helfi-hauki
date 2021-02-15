@@ -21,6 +21,7 @@ use Drupal\helfi_api_base\Entity\RemoteEntityBase;
  *   handlers = {
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *     "list_builder" = "Drupal\Core\Entity\EntityListBuilder",
+ *     "storage" = "Drupal\helfi_hauki\Entity\Storage\ResourceStorage",
  *     "views_data" = "Drupal\views\EntityViewsData",
  *     "access" = "Drupal\helfi_api_base\Entity\Access\RemoteEntityAccess",
  *     "form" = {
@@ -161,6 +162,13 @@ final class Resource extends RemoteEntityBase {
         'max_length' => 255,
         'text_processing' => 0,
       ]);
+
+    $fields['resource_type'] = BaseFieldDefinition::create('string')
+      ->setLabel(new TranslatableMarkup('Resource type'))
+      ->setSettings([
+        'is_ascii' => TRUE,
+      ])
+      ->setReadOnly(TRUE);
 
     $fields['origins'] = BaseFieldDefinition::create('key_value')
       ->setLabel(new TranslatableMarkup('Origins'))

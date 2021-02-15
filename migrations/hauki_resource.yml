@@ -17,6 +17,7 @@ source:
       type: string
 process:
   id: id
+  resource_type: resource_type
 destination:
   plugin: hauki_resource
 migration_dependencies: {}
