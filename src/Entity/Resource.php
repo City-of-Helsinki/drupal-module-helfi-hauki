@@ -54,9 +54,9 @@ use Drupal\helfi_api_base\Entity\RemoteEntityBase;
  *   },
  *   links = {
  *     "canonical" = "/hauki-resource/{hauki_resource}",
- *     "edit-form" = "/admin/content/hauki-resource/{hauki_resource}/edit",
- *     "delete-form" = "/admin/content/hauki-resource/{hauki_resource}/delete",
- *     "collection" = "/admin/content/hauki-resource"
+ *     "edit-form" = "/admin/content/integrations/hauki-resource/{hauki_resource}/edit",
+ *     "delete-form" = "/admin/content/integrations/hauki-resource/{hauki_resource}/delete",
+ *     "collection" = "/admin/content/integrations/hauki-resource"
  *   },
  *   field_ui_base_route = "hauki_resource.settings"
  * )
