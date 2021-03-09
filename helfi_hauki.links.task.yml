@@ -22,5 +22,5 @@ entity.hauki_resource.delete_form:
 hauki_resource.content_list:
   title: Hauki - Resource
   route_name: entity.hauki_resource.collection
-  base_route: system.admin_content
+  base_route: helfi_api_base.integrations
   weight: 10

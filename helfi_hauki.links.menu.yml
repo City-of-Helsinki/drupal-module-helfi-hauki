@@ -8,5 +8,5 @@ entity.hauki_resource.collection:
   title: Hauki - Resource entities
   description: List of Hauki resource entities
   route_name: entity.hauki_resource.collection
-  parent: system.admin_content
+  parent: helfi_api_base.integrations
 
