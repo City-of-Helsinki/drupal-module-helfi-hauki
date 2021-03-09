@@ -34,7 +34,7 @@ class ListTest extends MigrationTestBase {
    */
   public function testList() : void {
     // Make sure anonymous user can't see the entity list.
-    $this->drupalGet('/admin/content/hauki-resource');
+    $this->drupalGet('/admin/content/integrations/hauki-resource');
     $this->assertSession()->statusCodeEquals(403);
 
     // Make sure logged in user with access remote entities overview permission
@@ -46,14 +46,14 @@ class ListTest extends MigrationTestBase {
     $this->drupalLogin($account);
     // Migrate entities and make sure we can see all entities from fixture.
     $this->createResourceMigration();
-    $this->drupalGet('/admin/content/hauki-resource');
+    $this->drupalGet('/admin/content/integrations/hauki-resource');
     $this->assertSession()->pageTextContains('Displaying 1 - 20 of 20');
     // Make sure we only see english content.
     $this->assertSession()->pageTextContains('Name en 1');
     $this->assertSession()->pageTextNotContains('Name fi');
     $this->assertSession()->pageTextNotContains('Name sv');
     // Make sure we only see finnish content.
-    $this->drupalGet('/admin/content/hauki-resource', ['query' => ['language' => 'fi']]);
+    $this->drupalGet('/admin/content/integrations/hauki-resource', ['query' => ['language' => 'fi']]);
     $this->assertSession()->pageTextContains('Name fi 1');
     $this->assertSession()->pageTextNotContains('Name en');
     $this->assertSession()->pageTextNotContains('Name sv');
