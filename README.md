@@ -2,7 +2,7 @@
 
 ![CI](https://github.com/City-of-Helsinki/drupal-module-helfi-hauki/workflows/CI/badge.svg)
 
-Integrates [Hauki](https://hauki-test.oc.hel.ninja/api_docs/) with Drupal.
+This is a proof of concept module that integrates [Hauki](https://hauki-test.oc.hel.ninja/api_docs/) with Drupal. The module is not maintained at the moment (02-2023).
 
 ## Requirements
 
